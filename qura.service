@@ -1,0 +1,13 @@
+[Unit]
+Description=QURA server
+
+[Service]
+ExecStart=/home/ec2-user/qura/start.sh
+WorkingDirectory=/home/ec2-user/qura/
+LimitNOFILE=4096
+IgnoreSIGPIPE=false
+KillMode=process
+User=ec2-user
+
+[Install]
+WantedBy=multi-user.target

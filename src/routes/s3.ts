@@ -2,7 +2,7 @@
 import dotenv from "dotenv"
 import express from "express";
 
-// Multipart forms (multer)
+// Multipart forms (multer) --> config
 import multer from 'multer'
 import multerS3 from 'multer-s3'
 
@@ -57,7 +57,7 @@ const upload = multer({storage, limits:{ fileSize:12000000 }})
 
 // path, handler (upload is multer() + using storage engine of memory)
 router.post('/file', upload.single('file'), async (req, res, next) => {
-      // tslint:disable-next-line:no-console
+
       // process input for dynamo + S3 here.
 
       // tslint:disable-next-line:no-console
@@ -94,25 +94,9 @@ router.post('/file', upload.single('file'), async (req, res, next) => {
         // uploadFileToS3()
         const uploaded = await s3Client.send(new PutObjectCommand(putCommandInput));
 
-        // needs work around the metadata --> fairly sure I need to use a specific library
+        // needs work around the metadata 
 
-                // const s3Uploaded = new Upload({
-                //     client: s3,
-                //     params: {
-                //         Bucket: process.env.S3_BUCKET,
-                //         Key: fileKey,
-                //         Body: req.file.buffer,
-                //         ContentType: req.file.mimetype,
-                //         ContentDisposition: "inline",
-                //         ContentEncoding: req.file.encoding,
-                //         ContentLength: req.file.size,
-                //         Metadata:{
-                //             myMetaDataField: req.file.originalname
-                //         }
-                //     }
-                // })
-
-                // const uploadedFile = await s3Uploaded.done() // uploaded it or errored?
+        // const uploadedFile = await s3Uploaded.done() // uploaded it or errored?
 
         log("uploaded to s3")
         // NOW --> it exists in the s3bucket AND it exists IN the uploads table--> make a new detail using DB.makeDetail(fileID) and the TTL on the uploads table will remove it
@@ -146,21 +130,6 @@ router.post('/file', upload.single('file'), async (req, res, next) => {
   })
 
 
-
-router.get('/tst', async(req,res,next)=>{
-    let out;
-    s3.listBuckets((err:Error,data:ListBucketsCommandOutput)=>{
-        if (err){
-            res.send("ERROR");
-        }else{
-            out = data.Buckets.length;
-        }
-    })
-    res.send("ok" + out)
-})
-
-
-
 // PRE SIGNED S3 URLS
 // router.get('/presign', async (req,res)=>{
 
@@ -182,7 +151,7 @@ router.get('/tst', async(req,res,next)=>{
 // export this router to use in our index.js
 
 
-//overrides the linting for now
+// overrides the linting for now
 function log(param:any,pre?:string){
     if(pre){
             // tslint:disable-next-line:no-console

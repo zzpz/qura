@@ -18,10 +18,24 @@ app.use('/upload',s3Router)
 // define a route handler for the default home page
 app.get('/', (req, res) => {
     res.send(`
-      <h2>With <code>"express"</code> npm package</h2>
-      <form action="/api/upload" enctype="multipart/form-data" method="post">
-        <div>Text field title: <input type="text" name="title" /></div>
-        <div>File: <input type="file" name="someExpressFiles" multiple="multiple" /></div>
+      <h2>file upload</h2>
+      <a href="/comment">  /comment</a>
+      <form action="/upload/file" enctype="multipart/form-data" method="post">
+        <div>Description: <input type="text" name="description" /></div>
+        <div>File: <input type="file" name="file" /></div>
+        <input type="submit" value="Upload" />
+      </form>
+
+    `);
+  });
+
+  app.get('/comment', (req, res) => {
+    res.send(`
+      <h2>make comment</h2>
+      <a href="/">  /upload/file</a>
+      <form action="/api/comment" enctype="multipart/form-data" method="post">
+        <div>FileID: <input type="text" name="fileID" /></div>
+        <div>Comment: <input type="text" name="comment" /></div>
         <input type="submit" value="Upload" />
       </form>
     `);

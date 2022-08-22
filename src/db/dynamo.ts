@@ -55,7 +55,10 @@ export async function getCurrentFileDetails(fileID:string,sortKey:string="detail
 // take a single file (returned from dynamo)
 // use the as read version and attempt to increment
 // if it has been altered between these two transactions then it will fail with TransactionCanceledException[0] == ConditionalCheckFailed and no entries will be updated
-export async function optimisticTransactWrite(fileID:string,currentVersion:number,nextVersion:number,fileData?:Record<string,any>,comments?:Record<string,any>[],latestComment?:string) {
+export async function optimisticTransactWrite(fileID:string,currentVersion:number,nextVersion:number,fileData?:Record<string,any>,comments?:Record<string,any>[],latestComment?:string,newlastcomm?:string) {
+
+
+    //try{} catch(err) {}
 
     const description = `${currentVersion} -> ${nextVersion}: this was updated`
     const tableName = process.env.SINGLE_TABLE
@@ -64,7 +67,7 @@ export async function optimisticTransactWrite(fileID:string,currentVersion:numbe
 
     const latest = latestComment;
 
-    const newlastComment = '01GA2XF0M95M1VT5GA8BAFAKTW' // max(commentID) in comments[]
+    const newlastComment = newlastcomm || '01GA2XF0M95M1VT5GA8BAFAKTW' // max(commentID) in comments[]
 
     const item = {...fileData}
 
@@ -140,8 +143,9 @@ export async function createNewFile(fileKey:string,desc:string,originalname:stri
     const createdAt:string = created.toISOString();
 
 
-    const fileURL = originalname || fileID+".jpg"
+    const fileURL = fileKey
     // const fileURL = fileID+".jpg" //fileID as key? 'filename1234.jpg'
+    const title = originalname || 'Title'
     const description = originalname + ":" + desc || ""
 
     const putCommand:PutCommandInput = {
@@ -151,7 +155,9 @@ export async function createNewFile(fileKey:string,desc:string,originalname:stri
             sortKey : "details",
             version,
             fileURL,
+            title,
             description,
+            lastComment: "-",
             createdAt,
             expires // we will use this as a TTL
         }
@@ -210,9 +216,6 @@ export async function drainUploadsTableSingleFile(fileID:string) {
     const uploadTableName = process.env.UPLOAD_TABLE
     const detailTableName = process.env.SINGLE_TABLE
     const hashKey = "fileID"
-
-
-
 
     try{
 
@@ -273,7 +276,7 @@ export async function queryFileComments(fileID:string,commentID:string){
 
     const args:QueryCommandInput = {
         TableName:tableName,
-        // indexName
+        // indexName <--- NEED AN INDEX or this gets big
         // Limit: 20,
         ConsistentRead:true,
         KeyConditionExpression: "fileID = :fileID AND commentID >:commentID", // status as a key probably the solution here
@@ -293,3 +296,26 @@ export async function queryFileComments(fileID:string,commentID:string){
 }
 
 
+export async function browseFiles(){
+
+    const IndexName = 'sortKey-fileID-index'
+
+    const tableName = process.env.SINGLE_TABLE
+    const args:QueryCommandInput={
+        TableName:tableName,
+        IndexName,
+        KeyConditionExpression: "sortKey = :details",
+        ExpressionAttributeValues: {
+            ":details": "details"
+        }
+    }
+
+    return ddbDocClient.query(args)
+}
+
+//util
+export async function generateFileURL(fileKey:string){ //just return a signedURL?
+    
+    /// take a given file and give me the relevant S3/cloudfront file path
+
+}

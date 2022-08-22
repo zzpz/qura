@@ -3,6 +3,15 @@ import dotenv from "dotenv"
 import express from "express";
 
 
+// CONFIG --> multer
+import multer from 'multer'
+
+// not ideal -> signed url and client side is cleaner
+const storage = multer.memoryStorage() // store uploaded files in memory while we operate on them
+const upload = multer({storage, limits:{ fileSize:12000000 }})
+
+
+
 export const router = express.Router();
 
 // config
@@ -56,14 +65,15 @@ router.post('/createFile', async (req,res,next) =>{
 
 // take a provided file + comments and consolidate them into a new(latest) details of that file
 // TODO: (up to 20?)
-router.get('/consolidate', async(req,res,next) =>{
+router.post('/consolidate/:fileID',upload.none(), async(req,res,next) =>{
 
     let out;
 
     try{
-    const fID :string = "1234";
+    const fID :string = req.params?.fileID || "1234";
     const fileData: GetCommandOutput = await db.getCurrentFileDetails(fID)
     let lastComment:string;
+    const newLastComment: string = req.body.newlastcomment;
     const comments: Record<string,any>[] = []
 
     if(fileData.Item){ // found matching file details with this fID
@@ -71,8 +81,9 @@ router.get('/consolidate', async(req,res,next) =>{
         const nextVer: number = currentVer + 1
         lastComment = fileData.Item.lastComment
         out = fileData.Item
-        await db.optimisticTransactWrite(fileData.Item.fileID,currentVer,nextVer,fileData.Item,comments,lastComment);
+        await db.optimisticTransactWrite(fileData.Item.fileID,currentVer,nextVer,fileData.Item,comments,lastComment,newLastComment);
         res.send(`{next_val :${JSON.stringify({nextVer,lastComment},null,2)}`);
+        log("consolidated: "+fID)
     }else{
         out = "item not found"
         res.send('consolidate problems right here')
@@ -96,15 +107,21 @@ router.get('/consolidate', async(req,res,next) =>{
 
 
 // make a comment against a file ID TODO
-router.get("/comment", async(req,res,next)=>{
+router.post("/comment",upload.none(), async(req,res,next)=>{
     let out;
+
+    log(req.body)
 
     const commentID = uuid() // create a comment ID for insert and return this ID later on insert
 
     // request params
-    const fileID = '1234'
-    const comment = `comment: ${uuid()}`
-    const currentVersion = 2
+    const fileID: string =  req.body.fileID
+    const comment = req.body.comment
+
+    log(fileID)
+    log(comment)
+
+    const currentVersion = 0
     const username = `USER_${db.randomnum(5)}`;
     const reason:null = null;
 
@@ -120,7 +137,7 @@ router.get("/comment", async(req,res,next)=>{
             status,
             reason
         }
-
+        log(Item)
         const awsres = await (db.createCommentForFile(Item))
         out=Item
         res.send(JSON.stringify(out,null,2))
@@ -134,12 +151,37 @@ router.get("/comment", async(req,res,next)=>{
 
 
 // get the details of a file
-router.get('/file', async(req,res,next) =>{
+router.get('/file/:fileID/details', async(req,res,next) =>{
 
     const file:undefined = undefined
 
     // req params
-    const fileID = file||'1234'
+    const fileID = req.params?.fileID
+
+    try{
+        // get the latest comment ID from reading the file
+        const details = await db.getCurrentFileDetails(fileID);
+        if(details){
+            res.send(details.Item)
+        }else{
+            res.send("can't find this file in /file")
+        }
+
+    }catch(error){
+        next(error)
+
+    }
+})
+
+
+
+// get the comments of a file that have not been actioned
+router.get('/file/:fileID', async(req,res,next) =>{
+
+    const file:undefined = undefined
+
+    // req params
+    const fileID = req.params?.fileID
 
     try{
         // get the latest comment ID from reading the file
@@ -165,6 +207,32 @@ router.get('/file', async(req,res,next) =>{
     }
 })
 
+router.get('/browse', async(req,res,next) =>{
+    try {
+        const files = await db.browseFiles();
+        if(files.Items){
+            res.send(files.Items)
+        }else{
+            res.send("no files found")
+        }
+        
+    } catch (error) {
+        next(error)
+        
+    }
+})
 
+// UTIL
+function log(param:any,pre?:string){
+    if(pre){
+            // tslint:disable-next-line:no-console
+        console.log(`####\n${pre}\n####`)
+    // tslint:disable-next-line:no-console
+        console.log(param)
+    }else{
+    // tslint:disable-next-line:no-console
+        console.log(param);
+    }
+}
 
 export default router;
