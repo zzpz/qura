@@ -94,7 +94,7 @@ router.post('/file', upload.single('file'), async (req, res, next) => {
         // uploadFileToS3()
         const uploaded = await s3Client.send(new PutObjectCommand(putCommandInput));
 
-        // needs work around the metadata 
+        // needs work around the metadata
 
         // const uploadedFile = await s3Uploaded.done() // uploaded it or errored?
 

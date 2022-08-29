@@ -58,7 +58,7 @@ export async function getCurrentFileDetails(fileID:string,sortKey:string="detail
 export async function optimisticTransactWrite(fileID:string,currentVersion:number,nextVersion:number,fileData?:Record<string,any>,comments?:Record<string,any>[],latestComment?:string,newlastcomm?:string) {
 
 
-    //try{} catch(err) {}
+    // try{} catch(err) {}
 
     const description = `${currentVersion} -> ${nextVersion}: this was updated`
     const tableName = process.env.SINGLE_TABLE
@@ -313,9 +313,9 @@ export async function browseFiles(){
     return ddbDocClient.query(args)
 }
 
-//util
-export async function generateFileURL(fileKey:string){ //just return a signedURL?
-    
+// util
+export async function generateFileURL(fileKey:string){ // just return a signedURL?
+
     /// take a given file and give me the relevant S3/cloudfront file path
 
 }

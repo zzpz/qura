@@ -1,8 +1,10 @@
 import * as config from "./config"; // config
 import express from "express";
-// import apiRouter from "./routes/dyna"
+
+import path from "path";
 import sdkroute from "./routes/dynamo"
 import s3Router from "./routes/s3"
+
 
 
 
@@ -15,8 +17,14 @@ const app = express();
 app.use('/api', sdkroute)
 app.use('/upload',s3Router)
 
+// serve the react app
+const root = path.resolve(__dirname, '../../client','build')
+app.use(express.static(root));
+
+
+
 // define a route handler for the default home page
-app.get('/', (req, res) => {
+app.get('/upload', (req, res) => {
     res.send(`
       <h2>file upload</h2>
       <a href="/comment">  /comment</a>
@@ -41,7 +49,9 @@ app.get('/', (req, res) => {
     `);
   });
 
-
+app.get("*", (req, res) => {
+  res.sendFile('index.html', { root });
+})
 
 // start the Express server
 app.listen( port, () => {

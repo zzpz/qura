@@ -211,14 +211,14 @@ router.get('/browse', async(req,res,next) =>{
     try {
         const files = await db.browseFiles();
         if(files.Items){
-            res.send(files.Items)
+            res.send(files)
         }else{
             res.send("no files found")
         }
-        
+
     } catch (error) {
         next(error)
-        
+
     }
 })
 
