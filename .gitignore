@@ -23,7 +23,7 @@ example_imgs/*
 
 
 #server
-server/dist
+#server/dist
 server/start.sh
 server/node_modules
 server/.env

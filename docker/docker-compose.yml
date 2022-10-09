@@ -22,7 +22,7 @@ services:
       - ./data/certbot/www:/var/www/certbot 
     networks:
       - mynet
-    restart: "never"
+    restart: "no"
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     environment:
       - SITE_URL=http://43.205.192.54/
@@ -36,7 +36,7 @@ services:
 
   myapi:
     container_name: node_API
-    restart: "on-failure" #just incase
+    restart: "no" #just incase
     # image: get from github repository using Personal Access Token 
     # in the local env of the EC2 instance
     build: ../server
@@ -53,7 +53,7 @@ services:
 
   certbot:
     container_name: ssl_certbot
-    image: certbot/certbot
+    image: certbot/certbot:arm64v8-latest
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'" #renew every 12h
     networks:
       - mynet
