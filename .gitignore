@@ -2,7 +2,7 @@
 # dependencies
 client/node_modules
 # production
-client/build
+#client/build
 
 # misc
 client/.DS_Store

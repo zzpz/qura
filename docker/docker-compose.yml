@@ -7,12 +7,13 @@ networks:
 
 services:
   mynginx:
-    container_name: nginx_proxy
+    container_name: mynginx
     image: nginx:latest
     depends_on:
       - myapi
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       # we are still serving from API atm.
       # - ../client/build:/etc/client/build 
@@ -21,7 +22,7 @@ services:
       - ./data/certbot/www:/var/www/certbot 
     networks:
       - mynet
-    restart: "unless-stopped"
+    restart: "never"
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     environment:
       - SITE_URL=http://43.205.192.54/
