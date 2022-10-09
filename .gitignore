@@ -19,9 +19,15 @@ client/yarn-error.log*
 # docker and env
 docker/api.env
 
-example_imgs
+example_imgs/*
 
 
 #server
 server/dist
 server/start.sh
+server/node_modules
+server/.env
+
+
+# just yeah, no keys in commits please
+*.pem

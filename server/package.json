@@ -1,0 +1,36 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "node .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.142.0",
+    "@aws-sdk/client-s3": "^3.142.0",
+    "@aws-sdk/lib-dynamodb": "^3.142.0",
+    "@aws-sdk/s3-request-presigner": "^3.142.0",
+    "@types/multer": "^1.4.7",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "multer": "^1.4.5-lts.1",
+    "multer-s3": "^3.0.1",
+    "ulid": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/multer-s3": "^3.0.0",
+    "@types/node": "^16.11.47",
+    "js-beautify": "^1.14.5",
+    "tslint": "^6.1.3",
+    "typescript": "^4.7.4"
+  }
+}
