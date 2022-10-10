@@ -15,6 +15,8 @@ export default function NavBar(){
                 <li><Link to="/browse">Browse</Link></li>
                 <li><Link to="/upload">Upload</Link></li>
                 <li><Link to="/search">Search</Link></li>
+                <li><Link to="/signup">Sign Up</Link></li>
+                <li><Link to="/signin">Sign In</Link></li>
             </ul>
         </nav>
     );

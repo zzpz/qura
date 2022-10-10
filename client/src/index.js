@@ -5,9 +5,13 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
+//ROUTES
 import Item from './routes/ItemRoute'; //a sub path of browse
 import Browse from './routes/BrowseRoute';
 import Upload from './routes/UploadRoute';
+import Signup from './routes/SignupRoute';
+import Signin from './routes/SigninRoute';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -15,9 +19,11 @@ root.render(
     <BrowserRouter>
     <Routes>
       <Route path="/" element={<App/>}>
-      <Route path="item" element={<Item/>} />
+        <Route path="item" element={<Item/>} />
         <Route path="browse" element={<Browse/>} />      
         <Route path="upload" element={<Upload/>} />
+        <Route path="signup" element={<Signup/>} />
+        <Route path="signin" element={<Signin/>} />
         <Route path="*" element={<h2>not found</h2>} />
       </Route>
     </Routes>

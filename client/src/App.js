@@ -1,19 +1,27 @@
 import './App.css';
-import { Link, Outlet} from "react-router-dom";
+import { Outlet} from "react-router-dom";
 import NavBar from './components/NavBar';
+import { Account } from './components/Account';
+import Status from './components/Status';
 
 
 
 export default function App() {
   document.title = "QURA"
   return (   
+
     <div className="App" borderBottom="1px">
+      <Account> 
+      <Status></Status>
       <header className="App-header">
         <NavBar></NavBar>
       </header>
       <body>
+
       <Outlet />
       </body>
+      </Account>
+
     </div>
   );
 }

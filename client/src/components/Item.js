@@ -8,7 +8,7 @@ export class Item extends React.Component{
         isActive: false,
         title:'title',
         version: 0,
-        fileID: '',
+        fileID: 'this fileID should be replaced',
         description: '',
         createdAt : 'createdAt',
 url:'https://via.placeholder.com/150x150',
@@ -17,10 +17,7 @@ url:'https://via.placeholder.com/150x150',
 
       componentDidMount() {
         document.title = 'title'
-        // this.timerID = setInterval(
-        //     () => this.tick(),
-        //     1000
-        //   );
+
     }
   
     componentWillUnmount() {
