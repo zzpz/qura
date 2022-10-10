@@ -11,7 +11,6 @@ const SignupForm = () => {
 
     const onSubmit = (event) => {
         event.preventDefault();
-        // console.log({email,password});
 
         var attributeList = [];
 
@@ -29,13 +28,11 @@ const SignupForm = () => {
                 Value:family_name
             }
         };
-        console.log(data);
 
         for(const attr in data){
             attributeList.push(new CognitoUserAttribute(data[attr])) // this is just exploding a list into attribute objects
         }
 
-        console.log(attributeList);
 
         //username, password, attributeList[],validation
         //attribute list if we have additional attributes to write (like phone number,etc)
@@ -45,7 +42,6 @@ const SignupForm = () => {
                 alert(err.message || JSON.stringify(err));
                 return;
             }
-            console.log(result);
             var cognitoUser = result.user;
 	        console.log('user name is ' + cognitoUser.getUsername());
         });

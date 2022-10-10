@@ -17,7 +17,7 @@ const Account = (props) => {
             if (user) {
                 user.getSession((err,session) =>{
                     if(err){
-                        reject();
+                        reject(err);
                     }else{
                         resolve(session);
                     }
@@ -27,7 +27,7 @@ const Account = (props) => {
             }
 
         });
-    }
+    };
     
 
     const authenticate = async (username, password) =>{ //email and password auth

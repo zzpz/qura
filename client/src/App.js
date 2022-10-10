@@ -12,12 +12,11 @@ export default function App() {
 
     <div className="App" borderBottom="1px">
       <Account> 
-      <Status></Status>
+      <Status/>
       <header className="App-header">
         <NavBar></NavBar>
       </header>
       <body>
-
       <Outlet />
       </body>
       </Account>
