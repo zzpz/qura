@@ -11,5 +11,5 @@ const CognitoUserPoolData = {
     ClientId: "6kh0q06n4hd43gg2l48gaikqia" //TODO: ENV variable
 };
 
-var UserPool = new CognitoUserPool(CognitoUserPoolData) 
+var UserPool = new CognitoUserPool(CognitoUserPoolData);
 export {UserPool, CognitoUserAttribute, CognitoUser,	AuthenticationDetails}
