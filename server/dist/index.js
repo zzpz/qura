@@ -31,12 +31,14 @@ const express_1 = __importDefault(require("express"));
 const path_1 = __importDefault(require("path"));
 const dynamo_1 = __importDefault(require("./routes/dynamo"));
 const s3_1 = __importDefault(require("./routes/s3"));
+const auth_1 = __importDefault(require("./auth/auth"));
 // port
 const port = config.port;
 // app + routes
 const app = (0, express_1.default)();
 app.use('/api', dynamo_1.default);
 app.use('/upload', s3_1.default);
+app.use('/jwt', auth_1.default);
 // serve the react app
 const root = path_1.default.resolve(__dirname, '../../client', 'build');
 app.use(express_1.default.static(root));

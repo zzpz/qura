@@ -4,7 +4,8 @@ import { AccountContext } from "./Account";
 const Status = () => {
 
     const [status, setStatus] = useState(false);
-    const {getSession} = useContext(AccountContext); 
+    //pull in these vars?props?vals?functions? as context from Account Context
+    const {getSession, logout} = useContext(AccountContext);  
 
     useEffect(() => {
         getSession().then(session =>{
@@ -15,10 +16,10 @@ const Status = () => {
                 setStatus(false);
                 console.log("no session");
             });
-    },[]);
+    },[status]);
 
     return(
-        <div>{status ? "logged in" : "logged out"} </div>
+        <div>{status ? <button onClick={logout}>Logout</button> : "login"} </div>
     ) 
     //default to logged out
     //TODO: need to ensure this is in cookies not local storage?... 

@@ -8,7 +8,7 @@ export default function NavBar(){
           paddingBottom: "10px",
         }}
         >
-            "NavBar"
+            "NavBar" 
             <ul>
                 <li><Link to="/">Home</Link></li>
                 <li><Link to="/item">Item</Link></li>
@@ -17,6 +17,8 @@ export default function NavBar(){
                 <li><Link to="/search">Search</Link></li>
                 <li><Link to="/signup">Sign Up</Link></li>
                 <li><Link to="/signin">Sign In</Link></li>
+                <li><Link to="/settings">Settings</Link></li>
+                <li><Link to="/jwt">JWT test</Link></li>
             </ul>
         </nav>
     );

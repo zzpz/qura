@@ -1,27 +1,32 @@
 import './App.css';
 import { Outlet} from "react-router-dom";
 import NavBar from './components/NavBar';
-import { Account } from './components/Account';
+import { Account,AccountContext } from './components/Account';
 import Status from './components/Status';
 
 
+import { useOutletContext } from 'react-router-dom';
 
-export default function App() {
+
+const App = () => {
   document.title = "QURA"
   return (   
-
     <div className="App" borderBottom="1px">
-      <Account> 
-      <Status/>
+
+      <Account>
       <header className="App-header">
-        <NavBar></NavBar>
-      </header>
-      <body>
-      <Outlet />
-      </body>
+
+        <Status></Status>
+
+        <NavBar>      
+        </NavBar>
+        </header>
+
+      <Outlet/>
       </Account>
 
     </div>
   );
 }
 
+export default App

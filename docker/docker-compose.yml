@@ -19,7 +19,7 @@ services:
       # - ../client/build:/etc/client/build 
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot 
+      - ./data/certbot/www:/var/www/certbot
     networks:
       - mynet
     restart: "no"
@@ -46,8 +46,8 @@ services:
       - mynet
     volumes:
       - ../client/build:/QURA/client/build
-    env_file:
-      - api.env
+      - ../server/dist:/QURA/server/dist
+      - api.env:/QURA/server/.env
     ports:
       - "3000:3000"
 
@@ -60,7 +60,6 @@ services:
     volumes:
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
-
   # local rate limiting
   # myredis:
   #   image: redis:latest

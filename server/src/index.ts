@@ -4,6 +4,7 @@ import express from "express";
 import path from "path";
 import sdkroute from "./routes/dynamo"
 import s3Router from "./routes/s3"
+import JWTRouter from "./auth/auth"
 
 
 
@@ -16,6 +17,7 @@ const port = config.port;
 const app = express();
 app.use('/api', sdkroute)
 app.use('/upload',s3Router)
+app.use('/jwt',JWTRouter)
 
 // serve the react app
 const root = path.resolve(__dirname, '../../client','build')

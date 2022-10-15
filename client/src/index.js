@@ -12,6 +12,8 @@ import Browse from './routes/BrowseRoute';
 import Upload from './routes/UploadRoute';
 import Signup from './routes/SignupRoute';
 import Signin from './routes/SigninRoute';
+import Settings from './routes/SettingsRoute';
+import JWTRoute from './routes/JWTRoute';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -24,6 +26,8 @@ root.render(
         <Route path="upload" element={<Upload/>} />
         <Route path="signup" element={<Signup/>} />
         <Route path="signin" element={<Signin/>} />
+        <Route path="settings" element={<Settings/>}/>
+        <Route path="jwt" element={<JWTRoute/>}/>
         <Route path="*" element={<h2>not found</h2>} />
       </Route>
     </Routes>

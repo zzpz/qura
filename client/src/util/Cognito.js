@@ -7,9 +7,10 @@ import {
 
 
 const CognitoUserPoolData = {
-    UserPoolId: "ap-south-1_RCahvxZYV", //TODO: ENV variable
-    ClientId: "6kh0q06n4hd43gg2l48gaikqia" //TODO: ENV variable
+    UserPoolId: process.env.REACT_APP_USER_POOL_ID, //TODO: ENV variable
+    ClientId: process.env.REACT_APP_CLIENT_ID //TODO: ENV variable
 };
 
 var UserPool = new CognitoUserPool(CognitoUserPoolData);
 export {UserPool, CognitoUserAttribute, CognitoUser,	AuthenticationDetails}
+

@@ -1,11 +1,15 @@
+# private things I never want to commit
+private/*
 # client
 # dependencies
 client/node_modules
+
 # production
 #client/build
 
 # misc
 client/.DS_Store
+#client/.env
 client/.env.local
 client/.env.development.local
 client/.env.test.local
@@ -23,11 +27,12 @@ example_imgs/*
 
 
 #server
-#server/dist
+#include dist for now. Will be removed.
+server/dist
 server/start.sh
 server/node_modules
 server/.env
-
+server/config
 
 # just yeah, no keys in commits please
 *.pem

@@ -10,16 +10,55 @@ const Account = (props) => {
 
 
     // take the current user IF exists
-    // return session else reject
+    // returns session + gets user attributes
+    const getUserSession = async () => {
+        return await new Promise((resolve,reject) =>{
+            const user = UserPool.getCurrentUser();
+            if (user) {
+                user.getSession( async (err,session) =>{
+                    if(err){
+                        reject(err);
+                    }else{
+
+                        //get user attributes and return them
+                        const attributes = await new Promise((resolve,reject) => {
+                            user.getUserAttributes((err,attributes) => {
+                                if(err){
+                                    reject(err);
+                                } else {
+                                    //CognitoUserAttribute[] has been returned
+                                    const attrs = {};
+                                    attributes.forEach((cua)=>{
+                                        const {Name, Value} = cua;
+                                        attrs[Name] = Value;
+                                    })
+                                    // console.log(attributes)
+                                    resolve(attrs);
+                                }
+                            });
+                        });
+                        resolve({user, session, attributes}); //bundle them up and resolve
+                    }
+                })
+            } else {
+                reject();
+            }
+
+        });
+    };
+
+    
+
     const getSession = async () => {
         return await new Promise((resolve,reject) =>{
             const user = UserPool.getCurrentUser();
             if (user) {
-                user.getSession((err,session) =>{
+                user.getSession( async (err,session) =>{
                     if(err){
                         reject(err);
                     }else{
-                        resolve(session);
+                        //get user attributes and return them
+                       resolve(session);
                     }
                 })
             } else {
@@ -67,8 +106,18 @@ const Account = (props) => {
         });
     };
 
+    const logout = () => {
+        //create user variable to get current user if exists
+        const user = UserPool.getCurrentUser();
+        if(user){
+            user.signOut();
+            console.log("logout");
+        }//else you are a bot. 
+        return
+    }
+
     return(
-        <AccountContext.Provider value={{authenticate, getSession}}>
+        <AccountContext.Provider value={{authenticate, getSession, getUserSession, logout}}>
             {props.children}
         </AccountContext.Provider>
     )

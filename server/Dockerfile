@@ -16,16 +16,16 @@ COPY tsconfig.json ./
 # install app dependencies
 COPY package.json ./
 COPY package-lock.json ./
-RUN npm install
-#^ this makes a lot of layers that should be one image not 11
-
 
 # add app
 COPY src ./src
+COPY .env_example .env
 
-#serve ../client/build
 
-# run pre-build, build and start
-CMD npm start
+RUN npm install
+# pre-build, build 
+#^ this makes a lot of layers and should be used as a source in multi-stage build
 
-# 
+# start
+CMD node .
+
