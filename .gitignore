@@ -28,10 +28,14 @@ example_imgs/*
 
 #server
 #include dist for now. Will be removed.
-server/dist
+#server/dist
+
+
 server/start.sh
 server/node_modules
 server/.env
+
+#private files
 server/config
 
 # just yeah, no keys in commits please
