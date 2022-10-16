@@ -19,6 +19,7 @@ export default function ItemCard(props) {
         alt = {cardState.title}
         height="140"
         image={'https://project1-upload-files-bucket.s3.ap-south-1.amazonaws.com/'+cardState.fileURL}
+        // src={'https://dyhn5p801r683.cloudfront.net/'+cardState.fileURL}
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">

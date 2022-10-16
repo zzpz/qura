@@ -8,14 +8,14 @@ export const createClientWithAuthToken = (session) => {
     //given session data, push the authToken into config
     const bearer_token = session.idToken.jwtToken;
     var bearer = `Bearer ${bearer_token}`;
-    console.log(bearer);
+    console.log("request made with client using session JWT:", bearer);
     const config = {
-        baseURL, 
-        headers: {"Authorization": bearer}
+        baseURL,
+        headers: { "Authorization": bearer }
     }
 
     const client = axios.create(
-     {...config}
+        { ...config }
     )
 
     return client

@@ -1,38 +1,58 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-//ROUTES
+import {
+  createRoutesFromElements,
+  createBrowserRouter,
+  RouterProvider,
+  Route,
+} from "react-router-dom";
+
+//errors
+import ErrorPage from "./error-page";
+
+//routes
+import Root from "./routes/root";
+
 import Item from './routes/ItemRoute'; //a sub path of browse
-import Browse from './routes/BrowseRoute';
+import Browse from './routes/browse';
 import Upload from './routes/UploadRoute';
 import Signup from './routes/SignupRoute';
 import Signin from './routes/SigninRoute';
 import Settings from './routes/SettingsRoute';
 import JWTRoute from './routes/JWTRoute';
+import Image from './routes/ProtectBrowse';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route
+      path="/"
+      element={<Root></Root>}
+      errorElement={<ErrorPage />}
+    >
+
+
+      <Route path="Item" element={<Item />} />
+      <Route path="browse" element={<Browse />} />
+      <Route path="upload" element={<Upload />} />
+      <Route path="signup" element={<Signup />} />
+      <Route path="signin" element={<Signin />} />
+      <Route path="settings" element={<Settings />} />
+      <Route path="jwt" element={<JWTRoute />} />
+      <Route path="protected" element={<Image />} />
+      <Route path="*" element={<h2>not found</h2>} />
+
+    </Route>
+  )
+);
+
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<App/>}>
-        <Route path="item" element={<Item/>} />
-        <Route path="browse" element={<Browse/>} />      
-        <Route path="upload" element={<Upload/>} />
-        <Route path="signup" element={<Signup/>} />
-        <Route path="signin" element={<Signin/>} />
-        <Route path="settings" element={<Settings/>}/>
-        <Route path="jwt" element={<JWTRoute/>}/>
-        <Route path="*" element={<h2>not found</h2>} />
-      </Route>
-    </Routes>
-    </BrowserRouter>
-</React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>
 );
 
 

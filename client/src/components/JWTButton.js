@@ -1,36 +1,35 @@
-import React, {useEffect,useContext, useState} from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { AccountContext } from './Account';
 import * as requests from "../util/Requests"
 
 const JWTButton = (props) => {
 
-    const {getUserSession} = useContext(AccountContext);
-    
+    const { getUserSession } = useContext(AccountContext);
+
     const _onError = (error) => {
         console.error("JWTButton: ", error)
     }
 
     const _onSuccess = (data) => {
         console.log(data)
-        alert("Success! Your comments have been added.")
+        alert("Success! You have received signed cookies.")
         this.props.onClick()
     }
 
-    const onClick = () =>{
+    const onClick = () => {
         var url = "/test"
 
-        getUserSession().then((data)=>{
+        getUserSession().then((data) => {
             const axiosClient = requests.createClientWithAuthToken(
                 data.session
             )
             axiosClient.get(url).then((response) => {
-                console.log("response_data:",response.data)
-                console.log("response_headers",response.headers)
-            }).catch(err=>{
-                console.error(err);
+                _onSuccess(response.data);
+            }).catch(err => {
+                console.error("axios client error", err);
             })
         }).catch(err => {
-            console.error("user session error",err);
+            console.error("Cannot retrieve user session", err);
         })
     };
 

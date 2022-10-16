@@ -2,7 +2,8 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import ItemCard from '../components/ItemCard';
-
+import { Comment } from '../components/Comment';
+import SearchForm from '../components/SearchForm';
 
 
 export default function Browse(){
@@ -17,8 +18,9 @@ export default function Browse(){
   }
 
   React.useEffect(() => {
-    getBrowseData();
-  }, []);
+    getBrowseData(); //baaaaad we need to stop this happening every time you click an item
+
+  }, [currentItem]);
 
 
   let itemsBox = []
@@ -33,19 +35,24 @@ export default function Browse(){
   if(!currentItem){
     return (
       <main style={{padding:"1rem 0"}}>
-        <h2>Many Items</h2>
-        <ul>
+                            <div id="search">
+            <SearchForm />
+            </div>     
+        <h2>Many Items can be browsed</h2>
+        <div id="browselist">
+          <ul>
           {itemsBox}
-        </ul>
+          </ul>
+        </div>
       </main>
     );
   }else{
     return (
       <main style={{padding:"1rem 0"}}>
-    <h2>ONE Item</h2>
+  
+    <h2>A single Item can be commented on</h2>
     <ItemCard {...currentItem}></ItemCard>
-    <button onClick={() => setCurrentItem(null)}>submit comment</button>
-    <Outlet context={{currentItem}}></Outlet>
+    <Comment {...currentItem} onClick={() => setCurrentItem(null)}>submit comment</Comment>
   </main>
 
     
@@ -53,17 +60,4 @@ export default function Browse(){
     );
   }
 }
-
-
-
-// async function getBrowseData(optional){
-//   return ({title:'title'})
-//     // const url = "/api/browse"
-   
-//     // const resp = await fetch(url); //promise
-//     // const json = await resp.json() //promise
-//     // return json.Items
-// }
-
-
 

@@ -1,14 +1,15 @@
-import { Link} from "react-router-dom";
 
-export default function NavBar(){
-    return(
+import { Link } from "react-router-dom";
+import React from "react";
+
+export default function NavBar() {
+    return (
         <nav className="NavBar"
-        style={{
-          borderBottom: "solid 1px",
-          paddingBottom: "10px",
-        }}
+            style={{
+            }}
         >
-            "NavBar" 
+            <h1>Queensland University Regiment Association Inc</h1>
+
             <ul>
                 <li><Link to="/">Home</Link></li>
                 <li><Link to="/item">Item</Link></li>
@@ -19,6 +20,7 @@ export default function NavBar(){
                 <li><Link to="/signin">Sign In</Link></li>
                 <li><Link to="/settings">Settings</Link></li>
                 <li><Link to="/jwt">JWT test</Link></li>
+                <li><Link to="/protected">Protected Image</Link></li>
             </ul>
         </nav>
     );

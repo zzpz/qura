@@ -1,82 +1,133 @@
-import React, {useState} from "react";
-import {UserPool,CognitoUserAttribute,CognitoUser} from "../util/Cognito";
+import React, { useState } from "react";
+import { UserPool, CognitoUserAttribute, CognitoUser } from "../util/Cognito";
+
+
+
+
+//so much material ui
+
+import { TextField } from "@mui/material";
+
+
+// import FormLabel from "@material-ui/core/FormLabel";
+
+
+
 
 const SignupForm = () => {
 
-    const [email,setEmail] = useState("");
-    const [password,setPassword] = useState("");
-    const [family_name,setFamilyName] = useState("");
-    const [given_name,setGivenName] = useState("");
+    const defaultValues = {
+        given_name: "",
+        family_name: "",
+        email: "",
+        password: ""
+    };
+
+    const [formValues, setFormValues] = useState(defaultValues)
+
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormValues({
+            ...formValues,
+            [name]: value,
+        });
+    };
+
+
 
 
     const onSubmit = (event) => {
         event.preventDefault();
 
-        var attributeList = [];
+        let attributeList = [];
+
+        //now we can map this
 
         var data = {
-            Email:{
-            Name: 'email',
-            Value: email
+            Email: {
+                Name: 'email',
+                Value: formValues.email
             },
-            FirstName:{
-                Name:"given_name",
-                Value:given_name
+            FirstName: {
+                Name: "given_name",
+                Value: formValues.given_name
             },
-            LastName:{
-                Name:"family_name",
-                Value:family_name
+            LastName: {
+                Name: "family_name",
+                Value: formValues.family_name
             }
         };
 
-        for(const attr in data){
+        for (const attr in data) {
             attributeList.push(new CognitoUserAttribute(data[attr])) // this is just exploding a list into attribute objects
         }
 
-
-        //username, password, attributeList[],validation
+        //username, password, attributeList[],validation is null
         //attribute list if we have additional attributes to write (like phone number,etc)
 
-        UserPool.signUp(email,password, attributeList,null,(err,result)=>{
+        UserPool.signUp(formValues.email, formValues.password, attributeList, null, (err, result) => {
             if (err) {
                 alert(err.message || JSON.stringify(err));
                 return;
             }
-            var cognitoUser = result.user;
-	        console.log('user name is ' + cognitoUser.getUsername());
+            var cognitoUser = result.user; //user:CognitoUser
+            console.log('user name is ' + cognitoUser.getUsername());
         });
     };
 
     return (
-        <main style={{padding:"1rem 0"}}>
-        <div>
+        <main style={{ padding: "1rem 0" }}>
             <form onSubmit={onSubmit}>
-                <label htmlFor="email">Email</label>
-                <input
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                ></input>
-                <label htmlFor="password">Password</label>
-                <input
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
-                ></input>
-                <label htmlFor="Given Name">Given Name</label>
-                <input
-                    value={given_name}
-                    onChange={(event) => setGivenName(event.target.value)}
-                ></input>
-                <label htmlFor="Family Name">Family Name</label>
-                <input
-                    value={family_name}
-                    onChange={(event) => setFamilyName(event.target.value)}
-                ></input>
+                <TextField
+                    InputLabelProps={{ shrink: true }}
+                    id="name-input"
+                    name="given_name"
+                    label="First"
+                    type="text"
+                    placeholder="Your first name"
+                    value={formValues.given_name}
+                    onChange={handleInputChange}
+                />
+                <TextField
+                    InputLabelProps={{ shrink: true }}
+                    id="family-name-input"
+                    name="family_name"
+                    label="Last"
+                    type="text"
+                    placeholder="Your last name"
+                    value={formValues.family_name}
+                    onChange={handleInputChange}
+                />
+                <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
 
-
-            <button type="submit">Signup</button>
+                <TextField
+                    InputLabelProps={{ shrink: true }}
+                    id="email-input"
+                    name="email"
+                    label="Email"
+                    type="text"
+                    placeholder="Your first name"
+                    value={formValues.email}
+                    onChange={handleInputChange}
+                />
+                <TextField
+                    InputLabelProps={{ shrink: true }}
+                    id="password-input"
+                    name="password"
+                    label="Password"
+                    type="text"
+                    placeholder="Password1!"
+                    value={formValues.password}
+                    onChange={handleInputChange}
+                />
+                <br></br>
+                <button type="submit">Signup</button>
             </form>
-        </div>
-        </main>
+        </main >
     )
 }
 

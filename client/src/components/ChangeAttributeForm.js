@@ -46,7 +46,7 @@ const ChangeAttributeForm = () => {
     return (
         <div>
             <br></br>
-            <h3> This is another form for changing your details.</h3>
+            <h3> This is separate form for changing your details.</h3>
             <h4> You can see it but it will not work if you are logged out.</h4>
             <form onSubmit={onSubmit}>
                 <label>
