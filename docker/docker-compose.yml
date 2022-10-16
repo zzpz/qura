@@ -47,7 +47,8 @@ services:
     volumes:
       - ../client/build:/QURA/client/build
       - ../server/dist:/QURA/server/dist
-      - api.env:/QURA/server/.env
+      - ../server/config:/QURA/server/config #this contains private keys - look into aws keystore
+      - ./api.env:/QURA/server/.env
     ports:
       - "3000:3000"
 

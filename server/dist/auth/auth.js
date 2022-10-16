@@ -64,7 +64,7 @@ router.use(maketime, verifyJWT);
 // we will include this as a final middleware for logging
 function maketime(req, res, next) {
     // tslint:disable-next-line:no-console
-    console.log('Time:', Date.now());
+    console.log('ReqMade At:', Date.now());
     next();
 }
 // just for testing our protected routes
@@ -84,11 +84,11 @@ router.get('*', (req, res, next) => {
         const cookies = cookieMonster();
         // TODO: can't iterate signedCookiesOutput
         // can't use forin obj[key] because it's str,str,int,str ?
-        for (const [k, v] of Object.entries(cookies)) {
-            res.append("Set-Cookie", `CloudFront-Key-Pair-Id=${cookies["CloudFront-Key-Pair-Id"]}; Secure;Path=/;HttpOnly`);
-            res.append("Set-Cookie", `CloudFront-Signature=${cookies["CloudFront-Signature"]}; Secure;Path=/;HttpOnly`);
-            res.append("Set-Cookie", `CloudFront-Policy=${cookies["CloudFront-Policy"]}; Secure;Path=/;HttpOnly`);
-        }
+        // for( const [k,v] of Object.entries(cookies)){
+        res.append("Set-Cookie", `CloudFront-Key-Pair-Id=${cookies["CloudFront-Key-Pair-Id"]}; Secure;Path=/;HttpOnly`);
+        res.append("Set-Cookie", `CloudFront-Signature=${cookies["CloudFront-Signature"]}; Secure;Path=/;HttpOnly`);
+        res.append("Set-Cookie", `CloudFront-Policy=${cookies["CloudFront-Policy"]}; Secure;Path=/;HttpOnly`);
+        // }
         res.send(cookieMonster());
     }
     catch (err) {

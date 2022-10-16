@@ -19,7 +19,6 @@ COPY package-lock.json ./
 
 # add app
 COPY src ./src
-COPY .env_example .env
 
 
 RUN npm install
