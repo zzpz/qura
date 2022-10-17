@@ -51,9 +51,9 @@ exports.getCurrentFileDetails = getCurrentFileDetails;
 // take a single file (returned from dynamo)
 // use the as read version and attempt to increment
 // if it has been altered between these two transactions then it will fail with TransactionCanceledException[0] == ConditionalCheckFailed and no entries will be updated
-async function optimisticTransactWrite(fileID, currentVersion, nextVersion, fileData, comments, latestComment, newlastcomm) {
+async function optimisticTransactWrite(fileID, currentVersion, nextVersion, fileData, comments, latestComment, newlastcomm, newDescription) {
     // try{} catch(err) {}
-    const description = `${currentVersion} -> ${nextVersion}: this was updated`;
+    const description = newDescription || `${currentVersion} -> ${nextVersion}: this was updated`;
     const tableName = process.env.SINGLE_TABLE;
     const sk = `HISTORY_v${currentVersion}`;
     const latest = latestComment;

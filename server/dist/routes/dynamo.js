@@ -76,13 +76,15 @@ exports.router.post('/consolidate/:fileID', upload.none(), async (req, res, next
         const fileData = await db.getCurrentFileDetails(fID);
         let lastComment;
         const newLastComment = req.body.newlastcomment;
-        const comments = [];
+        const comments = [JSON.parse(req.body.comments)] || [];
+        const newDescription = req.body?.new_description || null;
         if (fileData.Item) { // found matching file details with this fID
             const currentVer = fileData.Item.version;
+            log(currentVer, "CURRENTVERISON");
             const nextVer = currentVer + 1;
             lastComment = fileData.Item.lastComment;
             out = fileData.Item;
-            await db.optimisticTransactWrite(fileData.Item.fileID, currentVer, nextVer, fileData.Item, comments, lastComment, newLastComment);
+            await db.optimisticTransactWrite(fileData.Item.fileID, currentVer, nextVer, fileData.Item, comments, lastComment, newLastComment, newDescription);
             res.send(`{next_val :${JSON.stringify({ nextVer, lastComment }, null, 2)}`);
             log("consolidated: " + fID);
         }
@@ -115,7 +117,8 @@ exports.router.post("/comment", upload.none(), async (req, res, next) => {
     const comment = req.body.comment;
     log(fileID);
     log(comment);
-    const currentVersion = 0;
+    // TODO: THIS IS NOT GOOD? - mostly for demoing
+    const currentVersion = req.body.currentVersion || (await db.getCurrentFileDetails(fileID)).Item.version;
     const username = `USER_${db.randomnum(5)}`;
     const reason = null;
     try {

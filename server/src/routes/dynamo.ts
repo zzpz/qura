@@ -74,14 +74,20 @@ router.post('/consolidate/:fileID',upload.none(), async(req,res,next) =>{
     const fileData: GetCommandOutput = await db.getCurrentFileDetails(fID)
     let lastComment:string;
     const newLastComment: string = req.body.newlastcomment;
-    const comments: Record<string,any>[] = []
+
+
+    const comments: Record<string,any>[] =  [JSON.parse(req.body.comments)] || []
+    const newDescription: string = req.body?.new_description || null;
+
+
 
     if(fileData.Item){ // found matching file details with this fID
         const currentVer: number = fileData.Item.version
+        log(currentVer,"CURRENTVERISON");
         const nextVer: number = currentVer + 1
         lastComment = fileData.Item.lastComment
         out = fileData.Item
-        await db.optimisticTransactWrite(fileData.Item.fileID,currentVer,nextVer,fileData.Item,comments,lastComment,newLastComment);
+        await db.optimisticTransactWrite(fileData.Item.fileID,currentVer,nextVer,fileData.Item,comments,lastComment,newLastComment,newDescription);
         res.send(`{next_val :${JSON.stringify({nextVer,lastComment},null,2)}`);
         log("consolidated: "+fID)
     }else{
@@ -121,7 +127,10 @@ router.post("/comment",upload.none(), async(req,res,next)=>{
     log(fileID)
     log(comment)
 
-    const currentVersion = 0
+    // TODO: THIS IS NOT GOOD? - mostly for demoing
+    const currentVersion = req.body.currentVersion || (await db.getCurrentFileDetails(fileID)).Item.version;
+
+
     const username = `USER_${db.randomnum(5)}`;
     const reason:null = null;
 
