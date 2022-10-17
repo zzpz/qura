@@ -20,9 +20,11 @@ const SigninForm = () => {
         authenticate(formValues.email, formValues.password)
             .then(data => {
                 console.log("Signed in!");
+                alert("Signed in successfully");
             })
             .catch(err => {
-                console.error("Failed to login")
+                console.error("error shouldn't be here");
+
             });
     };
 

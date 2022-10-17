@@ -61,6 +61,7 @@ router.post('/file', upload.single('file'), async (req, res, next) => {
     // tslint:disable-next-line:no-console
     log(req.file, "FILE INPUT:");
     const fileKey = uuid();
+    const title = req.body.title || null;
     const putRequest = {
         Bucket: process.env.S3_BUCKET,
         Key: fileKey,
@@ -80,7 +81,7 @@ router.post('/file', upload.single('file'), async (req, res, next) => {
     try {
         // insert a record into uploads table --> functionally acts as a queue, I hate it. but it provides consistency
         //
-        const uploadRecorded = await db.createNewFile(fileKey, req.body.description, req.file.originalname);
+        const uploadRecorded = await db.createNewFile(fileKey, req.body.description, req.file.originalname, title);
         log('Created upload entry');
         // NOW ->  go upload it to S3
         // uploadFileToS3()

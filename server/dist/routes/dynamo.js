@@ -78,13 +78,14 @@ exports.router.post('/consolidate/:fileID', upload.none(), async (req, res, next
         const newLastComment = req.body.newlastcomment;
         const comments = [JSON.parse(req.body.comments)] || [];
         const newDescription = req.body?.new_description || null;
+        const newTitle = req.body?.new_title || null;
         if (fileData.Item) { // found matching file details with this fID
             const currentVer = fileData.Item.version;
             log(currentVer, "CURRENTVERISON");
             const nextVer = currentVer + 1;
             lastComment = fileData.Item.lastComment;
             out = fileData.Item;
-            await db.optimisticTransactWrite(fileData.Item.fileID, currentVer, nextVer, fileData.Item, comments, lastComment, newLastComment, newDescription);
+            await db.optimisticTransactWrite(fileData.Item.fileID, currentVer, nextVer, fileData.Item, comments, lastComment, newLastComment, newDescription, newTitle);
             res.send(`{next_val :${JSON.stringify({ nextVer, lastComment }, null, 2)}`);
             log("consolidated: " + fID);
         }

@@ -55,7 +55,7 @@ export async function getCurrentFileDetails(fileID:string,sortKey:string="detail
 // take a single file (returned from dynamo)
 // use the as read version and attempt to increment
 // if it has been altered between these two transactions then it will fail with TransactionCanceledException[0] == ConditionalCheckFailed and no entries will be updated
-export async function optimisticTransactWrite(fileID:string,currentVersion:number,nextVersion:number,fileData?:Record<string,any>,comments?:Record<string,any>[],latestComment?:string,newlastcomm?:string,newDescription?:string) {
+export async function optimisticTransactWrite(fileID:string,currentVersion:number,nextVersion:number,fileData?:Record<string,any>,comments?:Record<string,any>[],latestComment?:string,newlastcomm?:string,newDescription?:string,newTitle?:string) {
 
 
     // try{} catch(err) {}
@@ -71,6 +71,7 @@ export async function optimisticTransactWrite(fileID:string,currentVersion:numbe
 
     const item = {...fileData}
 
+    const title = newTitle || fileData?.title || "" // that seems like a bad way to do that since we write the title EVERY TIME.
     let oldDesc = fileData?.description
     if(!oldDesc){oldDesc = 'no previous description'}
 
@@ -91,7 +92,7 @@ export async function optimisticTransactWrite(fileID:string,currentVersion:numbe
                             sortKey: "details"
                         },
                         ConditionExpression: "version = :currentVersion AND lastComment < :newlastComment",
-                        UpdateExpression: "ADD version :incr SET description = :description, lastComment= :newlastComment",
+                        UpdateExpression: "ADD version :incr SET description = :description, lastComment= :newlastComment, title= :title",
                         // ExpressionAttributeNames:{
                         //     "#c" :"comment"
                         // },
@@ -99,7 +100,8 @@ export async function optimisticTransactWrite(fileID:string,currentVersion:numbe
                             ":incr" : 1,
                             ":currentVersion": item.version,
                             ":newlastComment" : newlastComment,
-                            ":description" : description
+                            ":description" : description,
+                            ":title": title
                         },
                     }
                 },
@@ -129,7 +131,7 @@ export async function optimisticTransactWrite(fileID:string,currentVersion:numbe
 }
 
 
-export async function createNewFile(fileKey:string,desc:string,originalname:string){
+export async function createNewFile(fileKey:string,desc:string,originalname:string,itemTitle?:string){
     const TableName = process.env.UPLOAD_TABLE
     const fileID = fileKey
     const version = 0
@@ -143,10 +145,10 @@ export async function createNewFile(fileKey:string,desc:string,originalname:stri
     const createdAt:string = created.toISOString();
 
 
-    const fileURL = fileKey
+    const fileURL = fileKey // file ID is the key we use for access
     // const fileURL = fileID+".jpg" //fileID as key? 'filename1234.jpg'
-    const title = originalname || 'Title'
-    const description = originalname + ":" + desc || ""
+    const title = itemTitle || originalname
+    const description = desc || ""
 
     const putCommand:PutCommandInput = {
         TableName,

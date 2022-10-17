@@ -51,7 +51,7 @@ exports.getCurrentFileDetails = getCurrentFileDetails;
 // take a single file (returned from dynamo)
 // use the as read version and attempt to increment
 // if it has been altered between these two transactions then it will fail with TransactionCanceledException[0] == ConditionalCheckFailed and no entries will be updated
-async function optimisticTransactWrite(fileID, currentVersion, nextVersion, fileData, comments, latestComment, newlastcomm, newDescription) {
+async function optimisticTransactWrite(fileID, currentVersion, nextVersion, fileData, comments, latestComment, newlastcomm, newDescription, newTitle) {
     // try{} catch(err) {}
     const description = newDescription || `${currentVersion} -> ${nextVersion}: this was updated`;
     const tableName = process.env.SINGLE_TABLE;
@@ -59,6 +59,7 @@ async function optimisticTransactWrite(fileID, currentVersion, nextVersion, file
     const latest = latestComment;
     const newlastComment = newlastcomm || '01GA2XF0M95M1VT5GA8BAFAKTW'; // max(commentID) in comments[]
     const item = { ...fileData };
+    const title = newTitle || fileData?.title || ""; // that seems like a bad way to do that since we write the title EVERY TIME.
     let oldDesc = fileData?.description;
     if (!oldDesc) {
         oldDesc = 'no previous description';
@@ -77,7 +78,7 @@ async function optimisticTransactWrite(fileID, currentVersion, nextVersion, file
                         sortKey: "details"
                     },
                     ConditionExpression: "version = :currentVersion AND lastComment < :newlastComment",
-                    UpdateExpression: "ADD version :incr SET description = :description, lastComment= :newlastComment",
+                    UpdateExpression: "ADD version :incr SET description = :description, lastComment= :newlastComment, title= :title",
                     // ExpressionAttributeNames:{
                     //     "#c" :"comment"
                     // },
@@ -85,7 +86,8 @@ async function optimisticTransactWrite(fileID, currentVersion, nextVersion, file
                         ":incr": 1,
                         ":currentVersion": item.version,
                         ":newlastComment": newlastComment,
-                        ":description": description
+                        ":description": description,
+                        ":title": title
                     },
                 }
             },
@@ -114,7 +116,7 @@ async function optimisticTransactWrite(fileID, currentVersion, nextVersion, file
     return exports.ddbDocClient.transactWrite(args);
 }
 exports.optimisticTransactWrite = optimisticTransactWrite;
-async function createNewFile(fileKey, desc, originalname) {
+async function createNewFile(fileKey, desc, originalname, itemTitle) {
     const TableName = process.env.UPLOAD_TABLE;
     const fileID = fileKey;
     const version = 0;
@@ -123,10 +125,10 @@ async function createNewFile(fileKey, desc, originalname) {
     expiry.setTime(created.getTime() + 60 * 5 * 1000); // add 5 mins
     const expires = expiry.getTime() + '';
     const createdAt = created.toISOString();
-    const fileURL = fileKey;
+    const fileURL = fileKey; // file ID is the key we use for access
     // const fileURL = fileID+".jpg" //fileID as key? 'filename1234.jpg'
-    const title = originalname || 'Title';
-    const description = originalname + ":" + desc || "";
+    const title = itemTitle || originalname;
+    const description = desc || "";
     const putCommand = {
         TableName,
         Item: {

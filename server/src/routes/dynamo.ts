@@ -76,8 +76,10 @@ router.post('/consolidate/:fileID',upload.none(), async(req,res,next) =>{
     const newLastComment: string = req.body.newlastcomment;
 
 
+
     const comments: Record<string,any>[] =  [JSON.parse(req.body.comments)] || []
     const newDescription: string = req.body?.new_description || null;
+    const newTitle: string = req.body?.new_title || null;
 
 
 
@@ -87,7 +89,7 @@ router.post('/consolidate/:fileID',upload.none(), async(req,res,next) =>{
         const nextVer: number = currentVer + 1
         lastComment = fileData.Item.lastComment
         out = fileData.Item
-        await db.optimisticTransactWrite(fileData.Item.fileID,currentVer,nextVer,fileData.Item,comments,lastComment,newLastComment,newDescription);
+        await db.optimisticTransactWrite(fileData.Item.fileID,currentVer,nextVer,fileData.Item,comments,lastComment,newLastComment,newDescription,newTitle);
         res.send(`{next_val :${JSON.stringify({nextVer,lastComment},null,2)}`);
         log("consolidated: "+fID)
     }else{
