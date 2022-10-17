@@ -19,7 +19,7 @@ import Root from "./routes/root";
 
 import Item from './routes/ItemRoute'; //a sub path of browse
 import Browse from './routes/browse';
-import Upload from './routes/UploadRoute';
+import Upload from './routes/upload';
 import Signup from './routes/SignupRoute';
 import Signin from './routes/SigninRoute';
 import Settings from './routes/SettingsRoute';
@@ -43,7 +43,7 @@ const router = createBrowserRouter(
       <Route path="settings" element={<Settings />} />
       <Route path="jwt" element={<JWTRoute />} />
       <Route path="protected" element={<Image />} />
-      <Route path="*" element={<h2>not found</h2>} />
+      <Route path="*" element={<h2>This route does not exist</h2>} />
 
     </Route>
   )

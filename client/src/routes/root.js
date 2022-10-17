@@ -1,11 +1,17 @@
 import { Account } from "../components/Account";
 import NavBar from "../components/NavBar";
 import { Outlet } from "react-router-dom";
+import { useEffect } from "react";
 
 // our root route
 export default function Root() {
-    document.title = "QUR Association"
+
+    useEffect(() => {
+        document.title = "QUR Association Inc"
+    })
+
     return (
+
         <>
             {/* Exposes Account Context to sub components (outlet)*/}
             <Account>

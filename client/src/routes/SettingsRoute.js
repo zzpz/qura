@@ -1,8 +1,14 @@
 import Settings from "../components/Settings";
 import ChangeAttributeForm from "../components/ChangeAttributeForm";
 import Status from "../components/Status";
+import { useEffect } from "react";
 
-export default function set() {
+const SettingsRoute = () => {
+
+  useEffect(() => {
+    document.title = "QUR Association Inc"
+  })
+
   return (
     <main style={{ padding: "1rem 0" }}>
       <h2>Settings</h2>
@@ -13,3 +19,4 @@ export default function set() {
     </main>
   );
 }
+export default SettingsRoute

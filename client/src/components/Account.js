@@ -1,5 +1,5 @@
-import React, {createContext} from "react";
-import {UserPool,CognitoUser,AuthenticationDetails} from "../util/Cognito";
+import React, { createContext } from "react";
+import { UserPool, CognitoUser, AuthenticationDetails } from "../util/Cognito";
 
 
 // context for us to pass to our app's Outlet 
@@ -7,29 +7,30 @@ import {UserPool,CognitoUser,AuthenticationDetails} from "../util/Cognito";
 const AccountContext = createContext(); //what we use to determine if the current 'user' is logged in/etc
 
 const Account = (props) => {
+    document.title = "QUR Association"
 
 
     // take the current user IF exists
     // returns session + gets user attributes
     const getUserSession = async () => {
-        return await new Promise((resolve,reject) =>{
+        return await new Promise((resolve, reject) => {
             const user = UserPool.getCurrentUser();
             if (user) {
-                user.getSession( async (err,session) =>{
-                    if(err){
+                user.getSession(async (err, session) => {
+                    if (err) {
                         reject(err);
-                    }else{
+                    } else {
 
                         //get user attributes and return them
-                        const attributes = await new Promise((resolve,reject) => {
-                            user.getUserAttributes((err,attributes) => {
-                                if(err){
+                        const attributes = await new Promise((resolve, reject) => {
+                            user.getUserAttributes((err, attributes) => {
+                                if (err) {
                                     reject(err);
                                 } else {
                                     //CognitoUserAttribute[] has been returned
                                     const attrs = {};
-                                    attributes.forEach((cua)=>{
-                                        const {Name, Value} = cua;
+                                    attributes.forEach((cua) => {
+                                        const { Name, Value } = cua;
                                         attrs[Name] = Value;
                                     })
                                     // console.log(attributes)
@@ -37,7 +38,7 @@ const Account = (props) => {
                                 }
                             });
                         });
-                        resolve({user, session, attributes}); //bundle them up and resolve
+                        resolve({ user, session, attributes }); //bundle them up and resolve
                     }
                 })
             } else {
@@ -47,18 +48,18 @@ const Account = (props) => {
         });
     };
 
-    
+
 
     const getSession = async () => {
-        return await new Promise((resolve,reject) =>{
+        return await new Promise((resolve, reject) => {
             const user = UserPool.getCurrentUser();
             if (user) {
-                user.getSession( async (err,session) =>{
-                    if(err){
+                user.getSession(async (err, session) => {
+                    if (err) {
                         reject(err);
-                    }else{
+                    } else {
                         //get user attributes and return them
-                       resolve(session);
+                        resolve(session);
                     }
                 })
             } else {
@@ -67,10 +68,10 @@ const Account = (props) => {
 
         });
     };
-    
 
-    const authenticate = async (username, password) =>{ //email and password auth
-        return await new Promise((resolve,reject) => {
+
+    const authenticate = async (username, password) => { //email and password auth
+        return await new Promise((resolve, reject) => {
             //ICognitoUserData
             var cognitoUserData = {
                 Username: username,
@@ -78,7 +79,7 @@ const Account = (props) => {
             }
 
             //IAuthenticationDetailsData
-            var authDetailsData= {
+            var authDetailsData = {
                 Username: username,
                 Password: password,
             }
@@ -87,14 +88,14 @@ const Account = (props) => {
 
             const authDetails = new AuthenticationDetails(authDetailsData);
 
-            user.authenticateUser(authDetails,{
+            user.authenticateUser(authDetails, {
                 //callbacks
                 onSuccess: (data) => {
                     console.log("onSuccess: ", data);
                     resolve(data);
                 },
-                onFailure: (err)=> {
-                    console.error("onFailure: ",err);
+                onFailure: (err) => {
+                    console.error("onFailure: ", err);
                     reject(err);
                 },
                 newPasswordRequired: (data) => {
@@ -109,19 +110,19 @@ const Account = (props) => {
     const logout = () => {
         //create user variable to get current user if exists
         const user = UserPool.getCurrentUser();
-        if(user){
+        if (user) {
             user.signOut();
             console.log("logout");
         }//else you are a bot. 
         return
     }
 
-    return(
-        <AccountContext.Provider value={{authenticate, getSession, getUserSession, logout}}>
+    return (
+        <AccountContext.Provider value={{ authenticate, getSession, getUserSession, logout }}>
             {props.children}
         </AccountContext.Provider>
     )
 
 };
 
-export {Account, AccountContext};
+export { Account, AccountContext };

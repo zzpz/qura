@@ -1,11 +1,15 @@
 import React, { useState, useContext } from "react";
 import { AccountContext } from "./Account";
+import { TextField } from "@mui/material";
 
 const SigninForm = () => {
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const defaultValues = {
+        email: "",
+        password: ""
+    };
 
+    const [formValues, setFormValues] = useState(defaultValues)
     const { authenticate } = useContext(AccountContext);
 
 
@@ -13,7 +17,7 @@ const SigninForm = () => {
 
     const onSubmit = (event) => {
         event.preventDefault();
-        authenticate(email, password)
+        authenticate(formValues.email, formValues.password)
             .then(data => {
                 console.log("Signed in!");
             })
@@ -22,24 +26,42 @@ const SigninForm = () => {
             });
     };
 
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormValues({
+            ...formValues,
+            [name]: value,
+        });
+    };
+
     return (
         <main style={{ padding: "1rem 0" }}>
-            <div>
-                <form onSubmit={onSubmit}>
-                    <label htmlFor="email">Email</label>
-                    <input
-                        value={email}
-                        onChange={(event) => setEmail(event.target.value)}
-                    ></input>
-                    <label htmlFor="password">Password</label>
-                    <input
-                        value={password}
-                        onChange={(event) => setPassword(event.target.value)}
-                    ></input>
-                    <button type="submit">Log In</button>
-                </form>
-            </div>
-        </main>
+            <form onSubmit={onSubmit}>
+                <TextField
+                    InputLabelProps={{ shrink: true }}
+                    id="email-input"
+                    name="email"
+                    label="Email"
+                    type="text"
+                    placeholder="a@a.com"
+                    value={formValues.email}
+                    onChange={handleInputChange}
+                />
+                <TextField
+                    InputLabelProps={{ shrink: true }}
+                    id="password-input"
+                    name="password"
+                    label="Password"
+                    type="text"
+                    placeholder="Password1!"
+                    value={formValues.password}
+                    onChange={handleInputChange}
+                />
+                <br></br>
+                <br></br>
+                <button type="submit">SignIn</button>
+            </form>
+        </main >
     )
 }
 
