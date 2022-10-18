@@ -38,5 +38,11 @@ server/.env
 #private files
 server/config
 
+#terraform
+terraform/.*
+terraform/terraform.*
+terraform/credentials
+
+
 # just yeah, no keys in commits please
 *.pem
