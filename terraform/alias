@@ -1,0 +1,4 @@
+# useful aliases
+
+alias tap="terraform apply -auto-approve"
+alias tds="terraform destroy -auto-approve"
