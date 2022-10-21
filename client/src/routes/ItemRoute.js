@@ -3,7 +3,7 @@ import { Item as Itemm } from "../components/Item";
 import { useEffect } from "react";
 
 export default function Item() {
-  const fileURL = "01GCR45CG2SRR6NNGQ887AMEMY"
+  const fileURL = "01GBM97N3C9T74CJZBXF9ZNCR1"
   const props = { fileURL }
 
 
