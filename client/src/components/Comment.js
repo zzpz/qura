@@ -30,6 +30,7 @@ const Comment = (props) => {
             form_data.append(key, commentValues[key]);
         }
         form_data.append("fileID",props.fileID) // REALLY BAD       
+        console.log(form_data);
         return form_data
     }
 
@@ -61,7 +62,7 @@ const Comment = (props) => {
                     <textarea name="comment" placeholder="Describe the item here" onChange={_onChange} style={{width:"70%",height:"10%"}}></textarea>
                 </form> 
                 <br></br>
-                <button type="submit" onClick={props.onClick}>Submit</button>
+                <button type="submit" onClick={_onSubmit}>Submit</button>
             </div>
         );
 }
